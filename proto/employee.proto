@@ -1,0 +1,28 @@
+syntax = "proto3";
+package proto.employee;
+
+option go_package = "proto/api";
+
+service EmployeeService {
+  rpc Employee (EmployeeRequest) returns (EmployeeResponse);
+}
+
+enum EmployeeType {
+  FullTime = 0;
+  PartTime = 1;
+}
+
+message Employee {
+  string name = 1;
+  int32 age = 2;
+  string tel = 3;
+  EmployeeType type = 4;
+}
+
+message EmployeeRequest {
+  int64 id = 1;
+}
+
+message EmployeeResponse {
+  Employee employee = 1;
+}
