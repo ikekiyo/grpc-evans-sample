@@ -63,3 +63,13 @@ func (h *EmployeeHandler) Employee(
 		Employee: &employee,
 	}, nil
 }
+
+func (h *EmployeeHandler) Employees(
+	ctx context.Context,
+	req *api.EmployeesRequest,
+) (*api.EmployeesResponse, error) {
+	employees := employeeList()
+	return &api.EmployeesResponse{
+		Employees: employees,
+	}, nil
+}
