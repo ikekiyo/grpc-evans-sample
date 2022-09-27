@@ -16,8 +16,7 @@ message Employee {
   int64 id = 1;
   string name = 2;
   int32 age = 3;
-  string tel = 4;
-  EmployeeType type = 5;
+  EmployeeType type = 4;
 }
 
 message EmployeeRequest {
