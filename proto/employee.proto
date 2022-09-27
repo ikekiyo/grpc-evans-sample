@@ -5,6 +5,7 @@ option go_package = "gen/api";
 
 service EmployeeService {
   rpc Employee (EmployeeRequest) returns (EmployeeResponse);
+  rpc Employees (EmployeesRequest) returns (EmployeesResponse);
 }
 
 enum EmployeeType {
@@ -25,4 +26,10 @@ message EmployeeRequest {
 
 message EmployeeResponse {
   Employee employee = 1;
+}
+
+message EmployeesRequest {}
+
+message EmployeesResponse {
+  repeated Employee employees = 1;
 }

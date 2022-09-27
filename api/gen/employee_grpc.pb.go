@@ -19,6 +19,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type EmployeeServiceClient interface {
 	Employee(ctx context.Context, in *EmployeeRequest, opts ...grpc.CallOption) (*EmployeeResponse, error)
+	Employees(ctx context.Context, in *EmployeesRequest, opts ...grpc.CallOption) (*EmployeesResponse, error)
 }
 
 type employeeServiceClient struct {
@@ -38,11 +39,21 @@ func (c *employeeServiceClient) Employee(ctx context.Context, in *EmployeeReques
 	return out, nil
 }
 
+func (c *employeeServiceClient) Employees(ctx context.Context, in *EmployeesRequest, opts ...grpc.CallOption) (*EmployeesResponse, error) {
+	out := new(EmployeesResponse)
+	err := c.cc.Invoke(ctx, "/proto.employee.EmployeeService/Employees", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // EmployeeServiceServer is the server API for EmployeeService service.
 // All implementations must embed UnimplementedEmployeeServiceServer
 // for forward compatibility
 type EmployeeServiceServer interface {
 	Employee(context.Context, *EmployeeRequest) (*EmployeeResponse, error)
+	Employees(context.Context, *EmployeesRequest) (*EmployeesResponse, error)
 	mustEmbedUnimplementedEmployeeServiceServer()
 }
 
@@ -52,6 +63,9 @@ type UnimplementedEmployeeServiceServer struct {
 
 func (UnimplementedEmployeeServiceServer) Employee(context.Context, *EmployeeRequest) (*EmployeeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Employee not implemented")
+}
+func (UnimplementedEmployeeServiceServer) Employees(context.Context, *EmployeesRequest) (*EmployeesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Employees not implemented")
 }
 func (UnimplementedEmployeeServiceServer) mustEmbedUnimplementedEmployeeServiceServer() {}
 
@@ -84,6 +98,24 @@ func _EmployeeService_Employee_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _EmployeeService_Employees_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EmployeesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EmployeeServiceServer).Employees(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.employee.EmployeeService/Employees",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EmployeeServiceServer).Employees(ctx, req.(*EmployeesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // EmployeeService_ServiceDesc is the grpc.ServiceDesc for EmployeeService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -94,6 +126,10 @@ var EmployeeService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Employee",
 			Handler:    _EmployeeService_Employee_Handler,
+		},
+		{
+			MethodName: "Employees",
+			Handler:    _EmployeeService_Employees_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
