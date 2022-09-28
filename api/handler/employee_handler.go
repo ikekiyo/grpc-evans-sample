@@ -73,3 +73,25 @@ func (h *EmployeeHandler) Employees(
 		Employees: employees,
 	}, nil
 }
+
+func (h *EmployeeHandler) EmployeesByType(
+	ctx context.Context,
+	req *api.EmployeesByTypeRequest,
+) (*api.EmployeesByTypeResponse, error) {
+	employeeType := req.EmployeeType
+	employees := make([]*api.Employee, 0)
+	for _, e := range employeeList() {
+		if e.Type == employeeType {
+			employee := &api.Employee{
+				Id:   e.Id,
+				Name: e.Name,
+				Age:  e.Age,
+				Type: e.Type,
+			}
+			employees = append(employees, employee)
+		}
+	}
+	return &api.EmployeesByTypeResponse{
+		Employees: employees,
+	}, nil
+}
