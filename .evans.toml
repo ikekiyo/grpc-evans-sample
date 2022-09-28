@@ -1,0 +1,4 @@
+[default]
+protoFile = ["proto/employee.proto"]
+package = "proto.employee"
+service = "EmployeeService"
